@@ -1,0 +1,56 @@
+// Simplified India state coordinates for D3 choropleth
+// Each state has an approximate centroid for label placement
+
+export const INDIA_STATES: Record<string, { label: string; cx: number; cy: number }> = {
+  "Andhra Pradesh":       { label: "AP",  cx: 520, cy: 520 },
+  "Arunachal Pradesh":    { label: "AR",  cx: 780, cy: 180 },
+  "Assam":                { label: "AS",  cx: 740, cy: 240 },
+  "Bihar":                { label: "BR",  cx: 590, cy: 300 },
+  "Chhattisgarh":         { label: "CG",  cx: 545, cy: 400 },
+  "Goa":                  { label: "GA",  cx: 420, cy: 530 },
+  "Gujarat":              { label: "GJ",  cx: 370, cy: 380 },
+  "Haryana":              { label: "HR",  cx: 460, cy: 220 },
+  "Himachal Pradesh":     { label: "HP",  cx: 480, cy: 170 },
+  "Jharkhand":            { label: "JH",  cx: 610, cy: 360 },
+  "Karnataka":            { label: "KA",  cx: 460, cy: 560 },
+  "Kerala":               { label: "KL",  cx: 450, cy: 630 },
+  "Madhya Pradesh":       { label: "MP",  cx: 490, cy: 370 },
+  "Maharashtra":          { label: "MH",  cx: 450, cy: 460 },
+  "Manipur":              { label: "MN",  cx: 770, cy: 300 },
+  "Meghalaya":            { label: "ML",  cx: 730, cy: 270 },
+  "Mizoram":              { label: "MZ",  cx: 760, cy: 330 },
+  "Nagaland":             { label: "NL",  cx: 780, cy: 260 },
+  "Odisha":               { label: "OD",  cx: 590, cy: 430 },
+  "Punjab":               { label: "PB",  cx: 440, cy: 190 },
+  "Rajasthan":            { label: "RJ",  cx: 400, cy: 290 },
+  "Sikkim":               { label: "SK",  cx: 660, cy: 240 },
+  "Tamil Nadu":           { label: "TN",  cx: 490, cy: 620 },
+  "Telangana":            { label: "TS",  cx: 510, cy: 490 },
+  "Tripura":              { label: "TR",  cx: 750, cy: 310 },
+  "Uttar Pradesh":        { label: "UP",  cx: 530, cy: 270 },
+  "Uttarakhand":          { label: "UK",  cx: 510, cy: 200 },
+  "West Bengal":          { label: "WB",  cx: 650, cy: 340 },
+  "Delhi":                { label: "DL",  cx: 470, cy: 235 },
+  "Jammu & Kashmir":      { label: "JK",  cx: 450, cy: 130 },
+  "Ladakh":               { label: "LA",  cx: 500, cy: 110 },
+  "Chandigarh":           { label: "CH",  cx: 452, cy: 205 },
+  "Puducherry":           { label: "PY",  cx: 505, cy: 600 },
+  "Andaman & Nicobar Islands": { label: "AN", cx: 700, cy: 560 },
+  "Dadra & Nagar Haveli and Daman & Diu": { label: "DN", cx: 390, cy: 430 },
+  "Lakshadweep":          { label: "LD",  cx: 390, cy: 650 },
+}
+
+export const CRIME_TYPES = [
+  "Total IPC",
+  "Murder",
+  "Rape",
+  "Kidnapping",
+  "Assault on Women",
+  "Dowry Deaths",
+  "Robbery",
+  "Dacoity",
+  "Theft",
+  "Riots",
+]
+
+export const YEARS = [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014]

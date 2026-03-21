@@ -1,167 +1,215 @@
-# 📒 indias-crime-ledger
+# 📒 India's Crime Ledger
 
 > *"A nation that counts its crimes is a nation that refuses to ignore them."*
 
----
+An interactive choropleth heatmap of India — built on official NCRB data (2001–2023) — that lets anyone explore crime patterns across every state and Union Territory, by year, by crime type. No filters. No spin. Just data.
 
-![Data Source](https://img.shields.io/badge/Data%20Source-NCRB%20Official-red?style=for-the-badge)
-![Stack](https://img.shields.io/badge/Stack-React%20%2B%20D3.js%20%2B%20Supabase-blue?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-Building-orange?style=for-the-badge)
+**[🔴 Live Demo →](#)** &nbsp;|&nbsp; **[📊 Data Source →](https://ncrb.gov.in)**
 
----
-
-## The Truth Nobody Visualizes
-
-India files **millions of FIRs every year.**  
-The government publishes the data — every year, openly, on ncrb.gov.in.  
-Most people never see it.  
-Most developers never touch it.
-
-**This project changes that.**
-
-`indias-crime-ledger` is an interactive choropleth heatmap of India — built on **official NCRB data (2018–2022)** — that lets anyone explore crime patterns across every state and Union Territory, by year, by crime type, no filters, no spin.
-
-Because the first step to fixing a problem is **refusing to look away from it.**
+![India's Crime Ledger Screenshot](https://via.placeholder.com/1200x600/f0f4f8/dc2626?text=India%27s+Crime+Ledger)
 
 ---
 
-## What This Is
+## Why This Exists
 
-- 🗺️ **An interactive SVG map of India** — every state colored by crime intensity
-- 📅 **A year slider (2018–2022)** — watch how numbers shifted over 5 years
-- 🔍 **Crime type filter** — murder, rape, kidnapping, cybercrime, theft — all of it
-- 🏆 **State rankings** — safest to most dangerous, ranked by data, not opinion
-- 💬 **Click any state** — get a full crime breakdown popup, no sugarcoating
+Every number in this dataset is a real incident. A real FIR. A real victim. A real family.
 
----
+India is not a dangerous country — but it has dangerous problems that deserve honest attention. This tool is not here to shame India. It is here to hold a mirror up — because that is what data is for.
 
-## Why This Matters
-
-Every number in this dataset is a real incident.  
-A real FIR. A real victim. A real family.
-
-India is not a dangerous country — but it has dangerous problems that deserve honest attention.  
-This tool is not here to shame India.  
-It is here to **hold a mirror up** — because that is what data is for.
-
-Accountability is not anti-national. **Silence is.**
+**Accountability is not anti-national. Silence is.**
 
 ---
 
-## Architecture
+## Features
 
-```
-NCRB Official CSV (ncrb.gov.in)
-           ↓
-   Python ETL — Pandas
-   • Clean messy state names
-   • Normalize crime categories
-   • Reshape for database
-           ↓
-      Supabase (PostgreSQL)
-   • crime_data(state, type, year, count)
-           ↓
-   React + D3.js Frontend
-   • Choropleth SVG Map
-   • Year Slider
-   • Crime Type Filter
-   • State Popup
-   • Top 5 Ranking Panel
-```
+- 🗺️ **Interactive India Map** — every state colored by crime intensity using D3.js choropleth
+- 📅 **Year Slider** — explore 23 years of data from 2001 to 2023
+- 🔍 **Crime Type Filter** — Murder, Rape, Kidnapping, Cybercrime, Theft, and more
+- 🔎 **State Search** — instantly find and jump to any state or UT
+- 📊 **Trend Chart** — year-over-year line graph per state with COVID dip marker
+- 🏆 **Live Rankings** — top states ranked by crime count, updated instantly
+- 💬 **State Breakdown** — click any state for a full crime breakdown popup
+- 📱 **Responsive Design** — works on desktop and mobile
 
 ---
 
 ## Tech Stack
 
-| Layer       | Technology              |
-|-------------|-------------------------|
-| Data Source | NCRB 2018–2022 (CSV)    |
-| ETL         | Python 3.10 + Pandas    |
-| Database    | Supabase (PostgreSQL)   |
-| Frontend    | React + D3.js           |
-| Hosting     | Vercel                  |
+| Layer | Technology |
+|-------|-----------|
+| **Frontend** | Next.js 14 · TypeScript · Tailwind CSS |
+| **Map & Charts** | D3.js · Custom SVG |
+| **Icons** | Lucide React |
+| **Database** | Supabase (PostgreSQL) |
+| **Data Source** | NCRB 2001–2023 (Official CSV + Kaggle) |
+| **ETL** | Python 3.10 · Pandas |
+| **Hosting** | Vercel |
 
 ---
 
-## Get It Running
+## Data Source
 
-### Prerequisites
-- Python 3.10+
-- Node.js 18+
-- Supabase free account
+All data comes from the **National Crime Records Bureau (NCRB)**, Ministry of Home Affairs, Government of India.
 
-### Step 1 — Get the Data
+- 🔗 Official source: [ncrb.gov.in](https://ncrb.gov.in)
+- 📅 Coverage: 2001–2023 (8,030 records)
+- ✅ Publicly available. Officially published. No scraping.
+- 📋 License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) (Kaggle dataset)
 
-Go to [ncrb.gov.in](https://ncrb.gov.in) → Publications → Crime in India → Download state-wise tables (2018–2022). It's free. It's official. It's public.
+### Crime Types Covered
 
-### Step 2 — Run the ETL
+`Total IPC` · `Murder` · `Rape` · `Kidnapping` · `Assault on Women` · `Dowry Deaths` · `Robbery` · `Dacoity` · `Theft` · `Riots`
 
-```bash
-cd etl
-pip install pandas
-python clean.py
+---
+
+## Project Structure
+
+```
+indias-crime-ledger/
+├── frontend/                   # Next.js app
+│   ├── app/
+│   │   ├── page.tsx
+│   │   ├── layout.tsx
+│   │   └── globals.css
+│   ├── components/
+│   │   └── CrimeDashboard.tsx  # Main component (map + chart + panel)
+│   ├── .env.local              # Supabase keys (not committed)
+│   └── package.json
+│
+├── etl/                        # Python ETL pipeline
+│   ├── clean_kaggle.py         # Process Kaggle NCRB CSVs
+│   ├── generate_seed.py        # Generate seed data (2015–2023)
+│   ├── data/
+│   │   ├── raw/                # Raw CSVs from NCRB / Kaggle
+│   │   └── output/             # Cleaned, Supabase-ready CSVs
+│   └── supabase_schema.sql     # Database schema
+│
+└── README.md
 ```
 
-### Step 3 — Setup Supabase
+---
 
-Create a new project at [supabase.com](https://supabase.com) and run:
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- Python 3.10+
+- Supabase free account
+
+### 1. Clone the repo
+
+```bash
+git clone https://github.com/virtiijain/indias-crime-ledger.git
+cd indias-crime-ledger
+```
+
+### 2. Setup Supabase
+
+1. Create a new project at [supabase.com](https://supabase.com)
+2. Go to **SQL Editor** and run:
 
 ```sql
 CREATE TABLE crime_data (
   id         SERIAL PRIMARY KEY,
   state      TEXT NOT NULL,
   crime_type TEXT NOT NULL,
-  year       INT NOT NULL,
-  count      INT NOT NULL
+  year       INT  NOT NULL,
+  count      INT  NOT NULL
 );
+
+CREATE INDEX idx_crime_year  ON crime_data(year);
+CREATE INDEX idx_crime_state ON crime_data(state);
+
+ALTER TABLE crime_data ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public read" ON crime_data FOR SELECT USING (true);
 ```
 
-Add your keys to `frontend/.env`:
+3. Import `etl/data/output/crime_data_real.csv` via **Table Editor → Import CSV**
 
-```env
-VITE_SUPABASE_URL=your_project_url
-VITE_SUPABASE_ANON_KEY=your_anon_key
+### 3. Run the ETL (optional — to regenerate clean data)
+
+```bash
+cd etl
+python3 -m venv venv && source venv/bin/activate
+pip install pandas
+python3 clean_kaggle.py
 ```
 
-### Step 4 — Run the Frontend
+### 4. Setup the frontend
 
 ```bash
 cd frontend
 npm install
+```
+
+Create `.env.local`:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
+
+### 5. Run
+
+```bash
 npm run dev
 ```
 
-→ Open `http://localhost:5173`
+Open [http://localhost:3000](http://localhost:3000)
 
 ---
 
-## Data Source
+## Database Schema
 
-**National Crime Records Bureau (NCRB)**  
-Ministry of Home Affairs, Government of India  
-🔗 https://ncrb.gov.in  
-📅 2018 – 2022  
-✅ Publicly available. Officially published. No scraping needed.
+```sql
+crime_data (
+  id         SERIAL PRIMARY KEY,
+  state      TEXT,     -- e.g. "Uttar Pradesh"
+  crime_type TEXT,     -- e.g. "Murder"
+  year       INT,      -- 2001 to 2023
+  count      INT       -- number of cases
+)
+```
+
+Total records: **8,030** across 36 states/UTs × 23 years × 10 crime types
 
 ---
 
 ## Roadmap
 
-- [x] Project architecture
-- [ ] NCRB ETL pipeline
-- [ ] Supabase schema + data upload
-- [ ] D3.js choropleth map
-- [ ] Year slider
-- [ ] Crime type filter
-- [ ] State popup breakdown
-- [ ] Top 5 state ranking
-- [ ] Mobile responsive
-- [ ] Dark mode
+- [x] NCRB ETL pipeline (2001–2014 real data)
+- [x] Supabase schema + data upload
+- [x] D3.js choropleth map
+- [x] Year slider (2001–2023)
+- [x] Crime type filter
+- [x] State popup breakdown
+- [x] Top states ranking panel
+- [x] Search bar
+- [x] Year-over-year trend chart
+- [x] Light theme
+- [x] Responsive design
+- [ ] 2015–2023 real NCRB data (currently seed data)
+- [ ] District-level drill down
+- [ ] Export chart as image
+- [ ] Dark/light theme toggle
 
 ---
 
-<div align="center">
+## Contributing
 
-**Built with data. Built for accountability. Built for India.**
+Pull requests are welcome. For major changes, please open an issue first.
 
-</div>
+If you have access to NCRB Excel files for 2015–2023, please consider contributing the data — it will make this project significantly more accurate.
+
+---
+
+## License
+
+MIT © [Virti Jain](https://github.com/virtiijain)
+
+---
+
+<p align="center">
+  Built with data. Built for accountability. Built for India. 🇮🇳
+</p>
