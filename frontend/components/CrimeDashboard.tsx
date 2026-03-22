@@ -161,7 +161,7 @@ export default function CrimeDashboard() {
       // Dynamic import to keep bundle small
       const html2canvas = (await import('html2canvas')).default
       const canvas = await html2canvas(panelRef.current, {
-        backgroundColor: '#ffffff',
+        background: '#ffffff',
         scale: 2,
         useCORS: true,
         logging: false,
