@@ -1,12 +1,12 @@
 'use client'
 
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, useRef, useCallback } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import * as d3 from 'd3'
 import {
   Scale, Skull, AlertTriangle, Lock, ShieldAlert, HeartOff,
   Banknote, Users, ShoppingBag, Flame, Trophy, BarChart2,
-  Calendar, SlidersHorizontal, X, Search, MapPin, TrendingUp, List
+  Calendar, SlidersHorizontal, X, Search, MapPin, TrendingUp, List, Download
 } from 'lucide-react'
 
 const supabase = createClient(
@@ -91,6 +91,8 @@ export default function CrimeDashboard() {
   const [searchResults, setSearchResults] = useState<string[]>([])
   const [error, setError] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<'breakdown'|'trend'>('breakdown')
+  const [downloading, setDownloading] = useState(false)
+  const panelRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     async function fetchAll() {
@@ -151,6 +153,29 @@ export default function CrimeDashboard() {
     setSearch('')
     setSearchResults([])
   }
+
+  const handleDownload = useCallback(async () => {
+    if (!selectedState || !panelRef.current) return
+    setDownloading(true)
+    try {
+      // Dynamic import to keep bundle small
+      const html2canvas = (await import('html2canvas')).default
+      const canvas = await html2canvas(panelRef.current, {
+        backgroundColor: '#ffffff',
+        scale: 2,
+        useCORS: true,
+        logging: false,
+      })
+      const link = document.createElement('a')
+      link.download = `${selectedState.replace(/[^a-z0-9]/gi, '_')}_${selectedYear}_${selectedCrime.replace(/[^a-z0-9]/gi, '_')}.png`
+      link.href = canvas.toDataURL('image/png')
+      link.click()
+    } catch (e) {
+      console.error('Download failed:', e)
+    } finally {
+      setDownloading(false)
+    }
+  }, [selectedState, selectedYear, selectedCrime])
 
   if (loading) return (
     <div className="flex items-center justify-center h-screen" style={{ background: '#f0f4f8' }}>
@@ -347,20 +372,31 @@ export default function CrimeDashboard() {
           style={{ background: '#ffffff', borderLeft: '1px solid rgba(0,0,0,0.07)' }}>
 
           {selectedState ? (
-            <div className="flex-1 overflow-hidden flex flex-col">
+            <div className="flex-1 overflow-hidden flex flex-col" ref={panelRef}>
               {/* State header */}
               <div className="flex items-start justify-between p-4 pb-2 shrink-0">
                 <div>
                   <h3 className="font-bold text-sm" style={{ color: '#1e293b' }}>{selectedState}</h3>
                   <p className="text-xs mt-0.5" style={{ color: '#64748b' }}>{selectedYear} · {selectedCrime}</p>
                 </div>
-                <button onClick={() => setSelectedState(null)}
-                  className="w-6 h-6 rounded-md flex items-center justify-center transition-all"
-                  style={{ background: 'rgba(0,0,0,0.05)', color: '#64748b' }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#1e293b' }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = '#64748b' }}>
-                  <X size={11} />
-                </button>
+                <div className="flex items-center gap-1.5">
+                  <button onClick={handleDownload} disabled={downloading}
+                    className="flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium transition-all"
+                    style={{ background: 'rgba(220,38,38,0.08)', color: '#dc2626', border: '1px solid rgba(220,38,38,0.2)' }}
+                    title="Download as PNG"
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(220,38,38,0.15)' }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(220,38,38,0.08)' }}>
+                    <Download size={10} />
+                    <span>{downloading ? '...' : 'PNG'}</span>
+                  </button>
+                  <button onClick={() => setSelectedState(null)}
+                    className="w-6 h-6 rounded-md flex items-center justify-center transition-all"
+                    style={{ background: 'rgba(0,0,0,0.05)', color: '#64748b' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#1e293b' }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = '#64748b' }}>
+                    <X size={11} />
+                  </button>
+                </div>
               </div>
 
               {/* Total highlight */}
